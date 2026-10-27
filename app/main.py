@@ -6,7 +6,7 @@ from app.core.config import settings
 
 # Import routers that already exist
 from app.api.v1 import auth, shifts, pay, caregivers, clients, admin_shifts, admin_reports, admin_users
-from app.api.v1 import invoice_suggest, holidays
+from app.api.v1 import invoice_suggest, holidays, contact
 from app.api.v1 import scheduler as scheduler_api
 import app.api.v1.invoices as invoices
 
@@ -88,6 +88,7 @@ app.include_router(invoices.router, prefix="/api/v1", tags=["admin-invoices"])
 app.include_router(invoice_suggest.router, prefix="/api/v1", tags=["admin-invoices"])
 app.include_router(holidays.router, prefix="/api/v1", tags=["admin-holidays"])
 app.include_router(scheduler_api.router, prefix="/api/v1", tags=["scheduler"])
+app.include_router(contact.router, prefix="/api/v1", tags=["contact"])
 
 
 # ----------------------------------------------------------

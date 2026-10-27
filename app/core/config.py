@@ -34,6 +34,7 @@ class Settings(BaseSettings):
 
     # ----- HTTP / API surface -----
     CORS_ALLOW_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    CONTACT_INQUIRY_EMAIL: str = "angelsathomeal@gmail.com"
     ENABLE_DOCS: bool = True
     ENABLE_REDOC: bool = True
     ENABLE_OPENAPI: bool = True
