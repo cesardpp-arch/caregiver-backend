@@ -241,10 +241,11 @@ def update_client(client_id: int,
     _validate_non_negative(payload.bill_day, "bill_day")
     _validate_non_negative(payload.bill_night, "bill_night")
 
+    # Only recalculate when a value that drives shift calculations really changes.
     recalc_closed_shifts = any([
-        payload.day_window_start is not None,
-        payload.day_window_end is not None,
-        payload.timezone is not None,
+        payload.day_window_start is not None and payload.day_window_start != c.day_window_start,
+        payload.day_window_end is not None and payload.day_window_end != c.day_window_end,
+        payload.timezone is not None and payload.timezone != c.timezone,
     ])
 
     if payload.name is not None: c.name = payload.name
@@ -274,7 +275,11 @@ def update_client(client_id: int,
     db.add(c)
     db.flush()
     if recalc_closed_shifts:
-        _recalculate_closed_shifts_for_client(db, c.client_id)
+        try:
+            _recalculate_closed_shifts_for_client(db, c.client_id)
+        except ValueError as exc:
+            db.rollback()
+            raise HTTPException(status_code=400, detail=str(exc)) from None
     db.commit()
     db.refresh(c)
 
